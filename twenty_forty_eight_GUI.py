@@ -10,16 +10,30 @@ except ImportError:
 import twenty_forty_eight
 
 # global variables
+WIDTH = 600
+HEIGHT = 600
+
 
 my_board = twenty_forty_eight.TwentyFortyEight(3, 3)
 
+
+# helper functions
+def new_game():
+    my_board.reset()
+
+
 # define event handlers
+def mouseclick():
+    print("mouseclick")
+
+
+def draw(canvas):
+    print(str(canvas))
 
 
 # create frame and add a button and labels
 frame = simplegui.create_frame("2048", WIDTH, HEIGHT)
 frame.add_button("Reset", new_game)
-label = frame.add_label("Turns = " + str(turn_counter))
 
 # register event handlers
 frame.set_mouseclick_handler(mouseclick)
