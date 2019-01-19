@@ -140,7 +140,8 @@ class TwentyFortyEight:
     def move(self, direction):
         """
         Move all tiles in the given direction and add
-        a new tile if any tiles moved.
+        a new tile if any tiles moved. Takes numeric input (1, 2, 3, 4)
+        is (up, down, left, right)
         """
         # create list for each index
         initial_tiles = self._initial_index_[direction]
