@@ -18,7 +18,7 @@ import twenty_forty_eight
 WIDTH = 600
 HEIGHT = 600
 GRID_ROWS = 3
-GRID_HEIGHT = 3
+GRID_COLS = 3
 
 my_board = twenty_forty_eight.TwentyFortyEight(3, 3)
 
@@ -41,7 +41,8 @@ def new_game():
 
 
 def draw(canvas):
-    pass
+    canvas.draw_text(str(my_board.get_tile(0, 0)), [WIDTH / GRID_ROWS, HEIGHT / GRID_COLS],
+                     48, "white")
 
 
 # keyboard handler
@@ -69,7 +70,6 @@ frame.add_button("Reset", new_game)
 #          |  __  |/ _` | '_ \ / _` | |/ _ \ '__/ __|
 #          | |  | | (_| | | | | (_| | |  __/ |  \__ \
 #          |_|  |_|\__,_|_| |_|\__,_|_|\___|_|  |___/
-# frame.set_mouseclick_handler(mouseclick)
 frame.set_keydown_handler(keydown_handler)
 frame.set_draw_handler(draw)
 
