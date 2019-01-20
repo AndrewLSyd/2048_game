@@ -8,6 +8,7 @@ except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 import twenty_forty_eight
+import math
 
 #  __      _____ _       _           _
 # /_ |    / ____| |     | |         | |
@@ -17,10 +18,10 @@ import twenty_forty_eight
 #  |_(_)  \_____|_|\___/|_.__/ \__,_|_|___/
 WIDTH = 600
 HEIGHT = 600
-GRID_ROWS = 3
-GRID_COLS = 3
+GRID_ROWS = 4
+GRID_COLS = 4
 
-my_board = twenty_forty_eight.TwentyFortyEight(3, 3)
+my_board = twenty_forty_eight.TwentyFortyEight(GRID_ROWS, GRID_COLS)
 
 #  ___      _    _      _                    __                  _   _
 # |__ \    | |  | |    | |                  / _|                | | (_)
@@ -41,9 +42,14 @@ def new_game():
 
 
 def draw(canvas):
-    canvas.draw_text(str(my_board.get_tile(0, 0)), [WIDTH / GRID_ROWS, HEIGHT / GRID_COLS],
-                     48, "white")
-
+    for row in range(GRID_ROWS):
+        for col in range(GRID_COLS):
+            tile_val = my_board.get_tile(row, col)
+            col_val = min(255, int(math.log2(tile_val + 1) * 40))
+            canvas.draw_text(str(my_board.get_tile(row, col)), [WIDTH / GRID_COLS * (col + 0.45),
+                                                                HEIGHT / GRID_ROWS * (row + 0.6)],
+                             100, "rgb(" + str(col_val) + ", " + str("0") + ", " + str(255 - col_val) + ")")
+    label.set_text("Score = " + str(my_board.get_score()))
 
 # keyboard handler
 keydown_inputs = {simplegui.KEY_MAP["up"]: 1, simplegui.KEY_MAP["down"]: 2,
@@ -51,8 +57,12 @@ keydown_inputs = {simplegui.KEY_MAP["up"]: 1, simplegui.KEY_MAP["down"]: 2,
 
 
 def keydown_handler(key):
-    print(keydown_inputs[key])
-    my_board.move(keydown_inputs[key])
+    try:
+        print(keydown_inputs[key])
+        my_board.move(keydown_inputs[key])
+        print("score", my_board.get_score())
+    except KeyError:
+        print("invalid key")
 
 
 # create frame and add a button and labels
@@ -72,6 +82,14 @@ frame.add_button("Reset", new_game)
 #          |_|  |_|\__,_|_| |_|\__,_|_|\___|_|  |___/
 frame.set_keydown_handler(keydown_handler)
 frame.set_draw_handler(draw)
+frame.set_canvas_background("white")
+frame.add_label("")
+frame.add_label("Welcome to 2048!")
+frame.add_label("")
+frame.add_label("Use the arrow keys to slide the tiles.")
+frame.add_label("")
+label = frame.add_label("Score = " + str(my_board.get_score()))
+
 
 #  ______    _____ _             _      __
 # |____  |  / ____| |           | |    / _|

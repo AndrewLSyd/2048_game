@@ -13,6 +13,7 @@ UP = 1
 DOWN = 2
 LEFT = 3
 RIGHT = 4
+score = 0
 
 # Offsets for computing tile indices in each direction.
 # DO NOT MODIFY this dictionary.
@@ -49,14 +50,17 @@ def pair(line):
     :return: returns list that has been paired
     """
     # iterate over index / 2
+    score_inc = 0
     paired_list = list(line)
     for index in range(len(line) - 1):
         lower_index = index
         upper_index = index + 1
         if paired_list[lower_index] == paired_list[upper_index]:
+            "pair found - add score?"
             paired_list[lower_index] = (paired_list[lower_index] + paired_list[upper_index])
             paired_list[upper_index] = 0
-    return paired_list
+            score_inc += paired_list[lower_index]
+    return paired_list, score_inc
 
 
 def merge(line):
@@ -65,15 +69,18 @@ def merge(line):
     :param line: input list
     :return: returns merged list
     """
+    score_inc = 0
     # 1. slide towards 0 index
     slid_line = slide(line)
 #    print("1. slid line is", slid_line)
     # 2. pair values
-    paired_line = pair(slid_line)
+    pair_output = pair(slid_line)
+    paired_line = pair_output[0]
+    score_inc += pair_output[1]
 #    print("2. paired line is", paired_line)
     # 3. slide again
     merged_list = slide(paired_line)
-    return merged_list
+    return merged_list, score_inc
 
 
 class TwentyFortyEight:
@@ -97,6 +104,7 @@ class TwentyFortyEight:
         self._initial_index_ = {1: up_index, 2: down_index, 3: left_index, 4: right_index}
         self._initial_index_len_ = {1: self._grid_height_, 2: self._grid_height_,
                                     3: self._grid_width_, 4: self._grid_width_}
+        self._score_ = 0
 
         self.reset()
 
@@ -161,8 +169,13 @@ class TwentyFortyEight:
                 tile_index[0] += offsets[0]
                 tile_index[1] += offsets[1]
             print("unmerged", temp_list)
-            temp_list_merged = merge(temp_list)
+            merge_output = merge(temp_list)
+            self._score_ += merge_output[1]
+            print("score to add", self._score_)
+            temp_list_merged = merge_output[0]
             print("merged", temp_list_merged)
+            print(merge_output[1])
+
 
             # setting merged list back as tiles
             tile_index = [initial_tile[0], initial_tile[1]]
@@ -244,6 +257,9 @@ class TwentyFortyEight:
         Return the value of the tile at position row, col.
         """
         return self._grid_[row][col]
+
+    def get_score(self):
+        return self._score_
 
 try:
     poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
