@@ -13,7 +13,6 @@ UP = 1
 DOWN = 2
 LEFT = 3
 RIGHT = 4
-score = 0
 
 # Offsets for computing tile indices in each direction.
 # DO NOT MODIFY this dictionary.
@@ -259,6 +258,9 @@ class TwentyFortyEight:
         return self._grid_[row][col]
 
     def get_score(self):
+        """
+        Returns the score
+        """
         return self._score_
 
 try:
